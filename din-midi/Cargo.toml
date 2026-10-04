@@ -1,0 +1,16 @@
+[package]
+name = "din-midi"
+version = "0.1.0"
+description = "no_std DIN MIDI: a send queue for a UART, and the RP2350 UART driver around it"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[features]
+# The UART driver for the RP2350, on rp235x-hal.
+rp235x = ["dep:rp235x-hal", "dep:nb"]
+
+[dependencies]
+midi-wire = { path = "../midi-wire" }
+rp235x-hal = { version = "0.4", optional = true }
+nb = { version = "1.0", optional = true }

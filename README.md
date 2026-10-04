@@ -4,10 +4,10 @@
 
 | Crate | Role |
 |---|---|
-| `midi-wire` | Bytes to messages, with running status, real-time bytes mid-message and SysEx handled; USB MIDI packets to bytes. `no_std`, no allocator, tested on the host. |
+| `midi-wire` | Bytes to messages, with running status, real-time bytes mid-message and SysEx handled; messages back to bytes, compact for a UART or whole for USB; USB MIDI packets to bytes. `no_std`, no allocator, tested on the host. |
+| `din-midi` | DIN MIDI over a UART. `DinOut` is the send queue the transmit interrupt drains: whole messages only, running status within a burst, and room kept for note-offs when it fills. With the `rp235x` feature, `rp235x::Din` is the RP2350 UART driver around it, with the FIFOs off so every received byte can be timestamped as it lands. |
 
-Planned, once a project needs them: DIN MIDI in and out over a UART, and a USB
-MIDI device, both on `rp235x-hal`.
+Planned, once a project needs it: a USB MIDI device on `rp235x-hal`.
 
 ## Using it
 
@@ -31,4 +31,8 @@ midi-wire = { path = "../rp-midi/midi-wire" }
 cargo test
 cargo clippy --all-targets
 cargo build --target thumbv8m.main-none-eabihf
+cargo clippy -p din-midi --features rp235x --target thumbv8m.main-none-eabihf
 ```
+
+`din-midi`'s `rp235x` driver can only be checked on a chip: wire a UART's TX
+pin to its RX pin, and every byte sent comes back to be timed.
